@@ -1,0 +1,33 @@
+public class Solution {
+    public long fun(String[] words,String target,int index1,int index2,int[][] dp,int[][] freq) {
+        int x = 1000000007;
+        if (index2== target.length()) 
+            return 1;
+        if (index1 == words[0].length() ||words[0].length() - index1 < target.length() - index2) 
+            return 0;
+        if (dp[index1][index2] != -1) 
+            return dp[index1][index2];
+        long count = 0;
+        int pos = target.charAt(index2) - 'a';
+        count += fun(words,target,index1 + 1,index2, dp,freq);
+        count +=freq[index1][pos] * fun(words,target,index1 + 1,index2 + 1,dp,freq);
+        dp[index1][index2] = (int) (count % x);
+        return dp[index1][index2];
+    }
+    public int numWays(String[] words, String target) {
+        int l1 = words[0].length();
+        int l2 = target.length();
+        int[][] dp = new int[l1][l2];
+        for (int i = 0; i < l1; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        int[][] arr = new int[l1][26];
+        for (String s : words) {
+            for (int j = 0; j < l1; j++) {
+                int ch = s.charAt(j) - 'a';
+                arr[j][ch]++;
+            }
+        }
+        return (int) fun(words, target, 0, 0, dp, arr);
+    }
+}
